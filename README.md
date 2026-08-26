@@ -2,8 +2,8 @@
 
 **AI-Assisted Retail Planning Copilot**
 
-**Live prototype:** [afiesdesigns-collab.github.io/shelfsense-ai-retail-copilot](https://afiesdesigns-collab.github.io/shelfsense-ai-retail-copilot/) _(active once GitHub Pages is enabled)_
-**Case study by:** [Afshin Esmaeili](https://afshinesmaeeli.com) — Senior Product Designer
+**Live prototype:** [afiesdesigns-collab.github.io/shelfsense-ai-retail-copilot](https://afiesdesigns-collab.github.io/shelfsense-ai-retail-copilot/)
+**Case study by:** [Afshin Esmaeili](https://afshinesmaeili.com) — Senior Product Designer
 
 > **Disclaimer:** ShelfSense AI is an independent portfolio concept created to demonstrate enterprise product design, research, systems thinking, and prototyping for AI-assisted software. It is not affiliated with or commissioned by any company. All company names, users, operational scenarios, and datasets shown in this project are fictional or synthetic.
 
