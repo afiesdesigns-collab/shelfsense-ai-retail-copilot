@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ShelfSense AI — Recommendation Review Prototype</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page-head">
+    <h1>ShelfSense AI</h1>
+    <p>AI-assisted retail planning copilot. This page prototypes the recommendation-review moment — the point where a human inspects an AI suggestion's evidence and confidence, edits it, and decides whether to approve, reject, or escalate it. See the <a href="README.md">README</a> for the full case study.</p>
+  </header>
+
+  <div aria-live="polite" class="visually-hidden" id="live-region"></div>
+
+  <section class="section" aria-labelledby="rec-heading">
+    <h2 id="rec-heading">AI Workspace — Recommendation Review</h2>
+
+    <div class="rec-card" id="rec-card">
+      <div class="rec-top">
+        <span class="ai-marker"><span class="spark" aria-hidden="true">&#10022;</span> AI-generated recommendation</span>
+        <span class="confidence-badge medium" id="confidence-badge"><span class="dot" aria-hidden="true"></span>Medium confidence</span>
+      </div>
+      <h3>FrostZone 3000 — Store #482, Line 2</h3>
+      <p class="rec-action" id="rec-action-text">Increase the next delivery by <strong>18 cases</strong> and confirm shelf capacity with the store manager.</p>
+      <p class="freshness-label stale">
+        <span aria-hidden="true">&#9203;</span> Inventory data last synced 6 hours ago — may not reflect this morning's deliveries.
+      </p>
+
+      <div class="evidence-panel">
+        <h4>Supporting evidence</h4>
+        <ul class="evidence-list">
+          <li>Sales velocity increased 14% over the last two weeks.</li>
+          <li>Current on-hand inventory is estimated to last about 4 days.</li>
+          <li>A promotion for this product begins in 6 days.</li>
+          <li>A similar promotion increased demand 22% at three comparable stores.</li>
+          <li>Inventory count was last synced 6 hours ago and may be incomplete.</li>
+        </ul>
+      </div>
+
+      <div class="explain">
+        <button type="button" class="explain-toggle" id="explain-toggle" aria-expanded="false" aria-controls="explain-panel">
+          Why this recommendation?
+          <span class="chevron" aria-hidden="true">&#9662;</span>
+        </button>
+        <div class="explain-panel" id="explain-panel" hidden>
+          <dl>
+            <div class="explain-item">
+              <dt>What is being recommended?</dt>
+              <dd>Increase the next scheduled delivery by 18 cases and confirm shelf capacity with the store manager before it ships.</dd>
+            </div>
+            <div class="explain-item">
+              <dt>Why is it recommended?</dt>
+              <dd>Sales velocity is rising ahead of a promotion, and current inventory is projected to run out before the promotion ends.</dd>
+            </div>
+            <div class="explain-item">
+              <dt>What data supports it?</dt>
+              <dd>Two weeks of point-of-sale velocity, current on-hand inventory, the promotion calendar, and outcomes from three comparable stores' prior promotions.</dd>
+            </div>
+            <div class="explain-item">
+              <dt>How current is the data?</dt>
+              <dd>Sales data is current as of today. Inventory data is 6 hours old and may not include this morning's deliveries.</dd>
+            </div>
+            <div class="explain-item">
+              <dt>How confident is the system?</dt>
+              <dd>Medium. The comparable-store pattern is directionally reliable but based on a small sample of three stores.</dd>
+            </div>
+            <div class="explain-item">
+              <dt>What assumptions were made?</dt>
+              <dd>That the promotion proceeds on schedule, and that this store's shoppers respond similarly to the three comparable stores used for the estimate.</dd>
+            </div>
+            <div class="explain-item">
+              <dt>What could make this recommendation wrong?</dt>
+              <dd>Undercounted stockroom inventory, a delayed or cancelled promotion, or a shelf that physically cannot hold 18 additional cases.</dd>
+            </div>
+            <div class="explain-item">
+              <dt>What happens if you approve?</dt>
+              <dd>A draft delivery order is created for manager sign-off. Nothing is submitted to the distribution system automatically.</dd>
+            </div>
+            <div class="explain-item">
+              <dt>Can this be edited or reversed?</dt>
+              <dd>Yes. The quantity below can be changed before approval, and an approved draft order can still be reversed by a manager before it is fulfilled.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="qty-input">Recommended delivery increase (cases)</label>
+        <input type="number" id="qty-input" min="0" step="1" value="18" aria-describedby="qty-hint" />
+        <span class="hint" id="qty-hint">Editable. The original AI-recommended value was 18 cases.</span>
+      </div>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="capacity-check" />
+        <label for="capacity-check">Add a step to confirm shelf capacity with the store manager before this order ships.</label>
+      </div>
+
+      <div class="btn-row" id="action-row">
+        <button type="button" class="btn btn-primary" id="approve-btn">Approve</button>
+        <button type="button" class="btn btn-danger" id="reject-btn">Reject</button>
+        <button type="button" class="btn btn-secondary" id="escalate-btn">Escalate to manager</button>
+      </div>
+
+      <div class="feedback-panel" id="feedback-panel" hidden>
+        <h4>Why are you rejecting this recommendation?</h4>
+        <fieldset style="border:none;padding:0;margin:0;">
+          <legend class="visually-hidden">Rejection reason</legend>
+          <div class="choice-group" id="feedback-group">
+            <div class="choice-card">
+              <input type="radio" name="feedback-reason" id="reason-data" value="Data issue" />
+              <label for="reason-data">Data issue</label>
+            </div>
+            <div class="choice-card">
+              <input type="radio" name="feedback-reason" id="reason-reasoning" value="Reasoning issue" />
+              <label for="reason-reasoning">Reasoning issue</label>
+            </div>
+            <div class="choice-card">
+              <input type="radio" name="feedback-reason" id="reason-timing" value="Timing issue" />
+              <label for="reason-timing">Timing issue</label>
+            </div>
+            <div class="choice-card">
+              <input type="radio" name="feedback-reason" id="reason-context" value="Business context issue" />
+              <label for="reason-context">Business context issue</label>
+            </div>
+          </div>
+        </fieldset>
+        <div class="btn-row" style="margin-top:0;">
+          <button type="button" class="btn btn-primary" id="submit-feedback-btn">Submit feedback and reject</button>
+          <button type="button" class="btn btn-secondary" id="cancel-feedback-btn">Cancel</button>
+        </div>
+      </div>
+
+      <div id="decision-banner"></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="audit-heading">
+    <h2 id="audit-heading">Audit history</h2>
+    <p class="section-desc">Every AI and human action is preserved — nothing is silently overwritten.</p>
+    <ol class="audit-list" id="audit-list">
+      <li>
+        <span class="marker" aria-hidden="true"></span>
+        <span class="actor">AI</span>
+        <p class="event-text">Generated recommendation: increase delivery by 18 cases.</p>
+        <span class="event-time">Just now</span>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section" aria-labelledby="gallery-heading">
+    <h2 id="gallery-heading">Component gallery — Confidence &amp; data states</h2>
+    <p class="section-desc">Confidence is never communicated by color alone — every badge pairs a border/shape with a text label.</p>
+    <div class="badge-row" style="margin-bottom: var(--space-4);">
+      <span class="confidence-badge high"><span class="dot" aria-hidden="true"></span>High confidence</span>
+      <span class="confidence-badge medium"><span class="dot" aria-hidden="true"></span>Medium confidence</span>
+      <span class="confidence-badge low"><span class="dot" aria-hidden="true"></span>Low confidence</span>
+      <span class="ai-marker"><span class="spark" aria-hidden="true">&#10022;</span> AI-generated</span>
+    </div>
+    <div class="missing-data">
+      Inventory data is unavailable for this location. Recommendations that depend on it are paused until data is restored.
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="states-heading">
+    <h2 id="states-heading">Component gallery — Decision banners</h2>
+    <div class="banner banner-success" role="status">
+      <span class="banner-icon" aria-hidden="true">&#10003;</span>
+      <div><strong>Recommendation approved.</strong> A draft order was created for further processing — nothing was submitted automatically.</div>
+    </div>
+    <div class="banner banner-danger" role="status">
+      <span class="banner-icon" aria-hidden="true">&#10005;</span>
+      <div><strong>Recommendation rejected.</strong> Your feedback has been recorded and will inform future recommendations.</div>
+    </div>
+    <div class="banner banner-neutral" role="status">
+      <span class="banner-icon" aria-hidden="true">&#8593;</span>
+      <div><strong>Escalated to manager.</strong> A sales manager will review this recommendation before any action is taken.</div>
+    </div>
+    <p class="token-note">Tokens used: --color-primary/accent/danger/warning/success-* · --radius-md/pill · --focus-ring · --min-target</p>
+  </section>
+
+  <footer class="page-foot">
+    Built by <a href="https://afshinesmaeeli.com">Afshin Esmaeili</a> · <a href="README.md">Case study README</a>
+  </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
